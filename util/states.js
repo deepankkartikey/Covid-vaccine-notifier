@@ -1,15 +1,9 @@
 const axios = require('axios');
 const Table = require('tty-table');
-
-const config = {
-	headers: {
-		'User-Agent': 'axios app',
-	},
-};
-
+const { options, config } = require('./config');
 const getStatesUrl = 'https://cdn-api.co-vin.in/api/v2/admin/location/states';
 
-let header = [
+const header = [
 	{
 		value: 'state_id',
 		headerColor: 'cyan',
@@ -25,15 +19,6 @@ let header = [
 		alias: 'State Name',
 	},
 ];
-const options = {
-	borderStyle: 'solid',
-	borderColor: 'blue',
-	headerAlign: 'center',
-	align: 'left',
-	color: 'white',
-	truncate: '...',
-	width: '90%',
-};
 
 module.exports = function () {
 	axios

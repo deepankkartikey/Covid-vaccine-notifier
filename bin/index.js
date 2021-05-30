@@ -1,3 +1,6 @@
 const states = require('../util/states');
+const districts = require('../util/districts');
 
-states();
+// states();
+
+districts(1);
