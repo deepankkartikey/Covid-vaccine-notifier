@@ -1,5 +1,7 @@
 const axios = require('axios');
 const Table = require('tty-table');
+const chalk = require('chalk');
+
 const { config, options } = require('./config');
 
 const getSlotsByDistrictUrl =
@@ -46,7 +48,7 @@ module.exports = function (districtId) {
 	var mm = String(todayDate.getMonth() + 1).padStart(2, '0'); //January is 0!
 	var yyyy = todayDate.getFullYear();
 	var formattedDate = `${dd}-${mm}-${yyyy}`;
-	console.log(formattedDate);
+	//console.log(formattedDate);
 	axios
 		.get(
 			getSlotsByDistrictUrl +
@@ -57,8 +59,10 @@ module.exports = function (districtId) {
 		.then(function (response) {
 			const centerData = response.data.centers;
 			var finalData = [];
+			var districtName;
 			// const availableCenters = Table(header, centerData, options).render();
 			centerData.forEach(item => {
+				districtName = item.district_name;
 				item.sessions.forEach(session => {
 					//console.log(session);
 					let ourData = {
@@ -75,6 +79,10 @@ module.exports = function (districtId) {
 				});
 			});
 			const finalSlotData = Table(header, finalData, options).render();
+			console.log(
+				chalk.blue.bgWhite.bold(`Date for which run --> ${formattedDate}`)
+			);
+			console.log(chalk.blue.bgWhite.bold(`District--> ${districtName}`));
 			console.log(finalSlotData);
 		})
 		.catch(function (error) {
