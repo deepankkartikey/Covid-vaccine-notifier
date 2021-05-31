@@ -2,6 +2,7 @@ const axios = require('axios');
 const Table = require('tty-table');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
+const notifier = require('node-notifier');
 
 const { config, options } = require('./config');
 
@@ -125,6 +126,11 @@ function makeGetRequest(districtId, formattedDate, answers) {
 			);
 			console.log(chalk.blue.bgWhite.bold(`District--> ${districtName}`));
 			console.log(finalSlotData);
+			notifier.notify({
+				title: 'Slot available',
+				message: 'Vaccine slot available',
+				wait: true,
+			});
 		})
 		.catch(function (error) {
 			console.log(error);
