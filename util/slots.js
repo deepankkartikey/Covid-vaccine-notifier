@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Table = require('tty-table');
 const chalk = require('chalk');
+const inquirer = require('inquirer');
 
 const { config, options } = require('./config');
 
@@ -49,11 +50,40 @@ module.exports = function (districtId) {
 	var yyyy = todayDate.getFullYear();
 	var formattedDate = `${dd}-${mm}-${yyyy}`;
 	//console.log(formattedDate);
+	inquirer
+		.prompt([
+			{
+				type: 'list',
+				name: 'choice',
+				message: 'Please choose age group',
+				choices: [
+					{
+						name: 'All ages',
+						value: '',
+					},
+					{
+						name: '45+',
+						value: '45',
+					},
+					{
+						name: '18-45',
+						value: '18',
+					},
+				],
+			},
+		])
+		.then(answers => {
+			console.log(answers);
+			makeGetRequest(districtId, formattedDate, answers);
+		});
+};
+
+function makeGetRequest(districtId, formattedDate, answers) {
 	axios
 		.get(
 			getSlotsByDistrictUrl +
 				`?district_id=${districtId}
-                &date=${formattedDate}`,
+            &date=${formattedDate}`,
 			config
 		)
 		.then(function (response) {
@@ -64,18 +94,29 @@ module.exports = function (districtId) {
 			centerData.forEach(item => {
 				districtName = item.district_name;
 				item.sessions.forEach(session => {
-					//console.log(session);
-					let ourData = {
-						center: item.name,
-						address: item.address,
-						available: session.available_capacity,
-						age: session.min_age_limit,
-						date: session.date,
-						dose1: session.available_capacity_dose1,
-						dose2: session.available_capacity_dose2,
-					};
-					//console.log(ourData);
-					finalData.push(ourData);
+					if (answers.choice == '') {
+						let ourData = {
+							center: item.name,
+							address: item.address,
+							available: session.available_capacity,
+							age: session.min_age_limit,
+							date: session.date,
+							dose1: session.available_capacity_dose1,
+							dose2: session.available_capacity_dose2,
+						};
+						finalData.push(ourData);
+					} else if (answers.choice == session.min_age_limit) {
+						let ourData = {
+							center: item.name,
+							address: item.address,
+							available: session.available_capacity,
+							age: session.min_age_limit,
+							date: session.date,
+							dose1: session.available_capacity_dose1,
+							dose2: session.available_capacity_dose2,
+						};
+						finalData.push(ourData);
+					}
 				});
 			});
 			const finalSlotData = Table(header, finalData, options).render();
@@ -89,4 +130,4 @@ module.exports = function (districtId) {
 			console.log(error);
 		})
 		.then(function () {});
-};
+}
