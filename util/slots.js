@@ -125,11 +125,19 @@ function makeGetRequest(districtId, formattedDate, answers) {
 				chalk.blue.bgWhite.bold(`Date for which run --> ${formattedDate}`)
 			);
 			console.log(chalk.blue.bgWhite.bold(`District--> ${districtName}`));
-			console.log(finalSlotData);
-			notifier.notify({
-				title: 'Slot available',
-				message: 'Vaccine slot available',
-				wait: true,
+			//console.log(finalData);
+			finalData.forEach(data => {
+				if (data.available > 0) {
+					notifier.notify({
+						title: 'Vaccine Slot available',
+						message: `District Name: ${districtName} 
+Center:${data.center} 
+Address:${data.address} 
+Age: ${data.age} 
+Available doses: ${data.available}`,
+						wait: true,
+					});
+				}
 			});
 		})
 		.catch(function (error) {
