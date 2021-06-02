@@ -14,8 +14,8 @@ program
 	.action(districts);
 // districts(1);
 program
-	.command('slot <districtid>')
-	.description('get list of all available slots by districtid')
+	.command('slot <pincode>')
+	.description('get list of all available slots by pincode')
 	.action(slots);
 // slots(15);
 program.parse();

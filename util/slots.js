@@ -6,8 +6,8 @@ const notifier = require('node-notifier');
 
 const { config, options } = require('./config');
 
-const getSlotsByDistrictUrl =
-	'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict';
+const getSlotsByPinCodeUrl =
+	'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin';
 
 const header = [
 	{
@@ -25,7 +25,7 @@ const header = [
 		alias: 'Center Address',
 	},
 	{
-		value: 'available',
+		value: 'available_slots',
 		color: 'red',
 		width: 25,
 		alias: 'Available Slots',
@@ -44,7 +44,7 @@ const header = [
 	},
 ];
 
-module.exports = function (districtId) {
+module.exports = function (pinCode) {
 	var todayDate = new Date();
 	var dd = String(todayDate.getDate()).padStart(2, '0');
 	var mm = String(todayDate.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -74,67 +74,72 @@ module.exports = function (districtId) {
 			},
 		])
 		.then(answers => {
-			console.log(answers);
-			makeGetRequest(districtId, formattedDate, answers);
+			//console.log(answers);
+			makeGetRequest(pinCode, formattedDate, answers);
 		});
 };
 
-function makeGetRequest(districtId, formattedDate, answers) {
+function makeGetRequest(pinCode, formattedDate, answers) {
 	axios
 		.get(
-			getSlotsByDistrictUrl +
-				`?district_id=${districtId}
-            &date=${formattedDate}`,
+			getSlotsByPinCodeUrl + `?pincode=${pinCode}&date=${formattedDate}`,
 			config
 		)
 		.then(function (response) {
-			const centerData = response.data.centers;
+			//console.log(response.data.sessions);
+			const centerData = response.data.sessions;
 			var finalData = [];
 			var districtName;
 			// const availableCenters = Table(header, centerData, options).render();
 			centerData.forEach(item => {
-				districtName = item.district_name;
-				item.sessions.forEach(session => {
-					if (answers.choice == '') {
-						let ourData = {
-							center: item.name,
-							address: item.address,
-							available: session.available_capacity,
-							age: session.min_age_limit,
-							date: session.date,
-							dose1: session.available_capacity_dose1,
-							dose2: session.available_capacity_dose2,
-						};
-						finalData.push(ourData);
-					} else if (answers.choice == session.min_age_limit) {
-						let ourData = {
-							center: item.name,
-							address: item.address,
-							available: session.available_capacity,
-							age: session.min_age_limit,
-							date: session.date,
-							dose1: session.available_capacity_dose1,
-							dose2: session.available_capacity_dose2,
-						};
-						finalData.push(ourData);
-					}
-				});
+				//console.log(item);
+				if (answers.choice == '') {
+					let ourData = {
+						center: item.name,
+						address: item.address,
+						available_doses: item.available_capacity,
+						dose1: item.available_capacity_dose1,
+						dose2: item.available_capacity_dose2,
+						age: item.min_age_limit,
+						date: item.date,
+						available_slots: item.slots,
+					};
+					finalData.push(ourData);
+				} else if (answers.choice == item.min_age_limit) {
+					let ourData = {
+						center: item.name,
+						address: item.address,
+						available_doses: item.available_capacity,
+						dose1: item.available_capacity_dose1,
+						dose2: item.available_capacity_dose2,
+						age: item.min_age_limit,
+						date: item.date,
+						available_slots: item.slots,
+					};
+					finalData.push(ourData);
+				}
 			});
+			if (finalData.length == 0) {
+				console.log(
+					`NO Slot available in ${pinCode} for age-group of ${answers.choice}`
+				);
+			}
 			const finalSlotData = Table(header, finalData, options).render();
 			console.log(
 				chalk.blue.bgWhite.bold(`Date for which run --> ${formattedDate}`)
 			);
-			console.log(chalk.blue.bgWhite.bold(`District--> ${districtName}`));
-			//console.log(finalData);
+			console.log(chalk.blue.bgWhite.bold(`Pincode--> ${pinCode}`));
+			//console.log(finalSlotData);
 			finalData.forEach(data => {
-				if (data.available > 0) {
+				console.log(data);
+				if (data.available_doses > 0) {
 					notifier.notify({
 						title: 'Vaccine Slot available',
-						message: `District Name: ${districtName} 
-Center:${data.center} 
+						message: `Center:${data.center} 
 Address:${data.address} 
 Age: ${data.age} 
-Available doses: ${data.available}`,
+Available doses: ${data.available}
+Available slots: ${data.available_slots}`,
 						wait: true,
 					});
 				}
