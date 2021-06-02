@@ -3,8 +3,9 @@ const Table = require('tty-table');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const notifier = require('node-notifier');
-
 const { config, options } = require('./config');
+require('dotenv').config();
+const fast2sms = require('fast-two-sms');
 
 const getSlotsByPinCodeUrl =
 	'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin';
@@ -44,13 +45,18 @@ const header = [
 	},
 ];
 
-module.exports = function (pinCode) {
-	var todayDate = new Date();
+module.exports = function (pinCode, date) {
+	var todayDate;
+	if (date == '') {
+		todayDate = new Date();
+	} else {
+		todayDate = new Date(date);
+	}
 	var dd = String(todayDate.getDate()).padStart(2, '0');
 	var mm = String(todayDate.getMonth() + 1).padStart(2, '0'); //January is 0!
 	var yyyy = todayDate.getFullYear();
 	var formattedDate = `${dd}-${mm}-${yyyy}`;
-	//console.log(formattedDate);
+	console.log(formattedDate);
 	inquirer
 		.prompt([
 			{
@@ -120,9 +126,7 @@ function makeGetRequest(pinCode, formattedDate, answers) {
 				}
 			});
 			if (finalData.length == 0) {
-				console.log(
-					`NO Slot available in ${pinCode} for age-group of ${answers.choice}`
-				);
+				console.log(`NO Slot available in ${pinCode} for selected age-group`);
 			}
 			const finalSlotData = Table(header, finalData, options).render();
 			console.log(
@@ -133,15 +137,9 @@ function makeGetRequest(pinCode, formattedDate, answers) {
 			finalData.forEach(data => {
 				console.log(data);
 				if (data.available_doses > 0) {
-					notifier.notify({
-						title: 'Vaccine Slot available',
-						message: `Center:${data.center} 
-Address:${data.address} 
-Age: ${data.age} 
-Available doses: ${data.available}
-Available slots: ${data.available_slots}`,
-						wait: true,
-					});
+					var message = createMessage(data);
+					notifyOnDesktop(message);
+					// notifyOnSMS(message);
 				}
 			});
 		})
@@ -149,4 +147,29 @@ Available slots: ${data.available_slots}`,
 			console.log(error);
 		})
 		.then(function () {});
+}
+
+function createMessage(data) {
+	return `Center:${data.center} 
+Address:${data.address} 
+Age: ${data.age} 
+Available doses: ${data.available_doses} 
+Available slots: ${data.available_slots}`;
+}
+
+function notifyOnDesktop(message) {
+	notifier.notify({
+		title: 'Vaccine Slot available',
+		message: `${message}`,
+		wait: true,
+	});
+}
+
+function notifyOnSMS(message) {
+	var options = {
+		authorization: process.env.API_KEY,
+		message: `${message}`,
+		numbers: ['8851849428'],
+	};
+	fast2sms.sendMessage(options);
 }
