@@ -17,7 +17,7 @@ API Used: [CoWin Public API](https://apisetu.gov.in/public/marketplace/api/cowin
 - Date for search criteria is defaulted to present day.
 - Ability to send SMS notification (if you enable API_KEY).
 
-### Requirements to run/develop on system\
+### Requirements to run (or) develop on system
 
 - [Visual studio code](https://code.visualstudio.com/download)
 
@@ -35,10 +35,19 @@ API Used: [CoWin Public API](https://apisetu.gov.in/public/marketplace/api/cowin
 
   `cowin <pincode> <date>`
 
-  - replace <pincode> by some valid value like 110042
-  - replace <date> either by '' (blank string) or desired date
+  - replace `<pincode>` by some valid value like 110042
+  - replace `<date>` either by `''` (blank string) or desired date
 
   - select age group from drop down presented on CLI
+
+### Screenshots of notifications
+- Push notification on system 
+
+![ADC65EF1-9A6C-40F5-89A9-B523C455A2CA](<img src="https://user-images.githubusercontent.com/17775859/120505870-04c5da80-c3e3-11eb-82e0-32a4e686ca54.jpeg" width="200" height="200">)
+- Text Notification 
+
+![text-notif](<img src="https://user-images.githubusercontent.com/17775859/120506591-b107c100-c3e3-11eb-8c39-2297b0df4c06.jpeg" width="200" height="200">)
+
 
 ### Result
 
