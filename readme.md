@@ -7,7 +7,7 @@ Inputs include:
 - Pincode
 - Date (mm-dd-yyyy) or default-blank string('')
 
-API Used: [CoWin Pulic API](https://apisetu.gov.in/public/marketplace/api/cowin#/Appointment%20Availability%20APIs/findByPin)
+API Used: [CoWin Public API](https://apisetu.gov.in/public/marketplace/api/cowin#/Appointment%20Availability%20APIs/findByPin)
 
 ### The CLI will perform the follow functions
 
@@ -19,7 +19,7 @@ API Used: [CoWin Pulic API](https://apisetu.gov.in/public/marketplace/api/cowin#
 
 ### Requirements to run/develop on system\
 
-- [Visual studio code] (https://code.visualstudio.com/download)
+- [Visual studio code](https://code.visualstudio.com/download)
 
 - Install Node js on your system.
   - [Docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
@@ -49,7 +49,7 @@ API Used: [CoWin Pulic API](https://apisetu.gov.in/public/marketplace/api/cowin#
   - available time slots
 
 - There is a provision to setup SMS service also (currently disabled as service is not free)
-  - API*KEY can be obtained [fast2sms](https://www.fast2sms.com/dashboard/dev-api) and place API_KEY = \_value from fast2sms*
+  - API-KEY can be obtained [fast2sms](https://www.fast2sms.com/dashboard/dev-api) and place API_KEY = _value from fast2sms_
     - (uncomment corresponding method for SMS notification `notifyOnSMS(message)`)
 
 ### Node Package used
