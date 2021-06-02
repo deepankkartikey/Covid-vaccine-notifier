@@ -4,6 +4,8 @@
   "description": "covid-19 vaccine notifier",
   "main": "bin/index.js",
   "scripts": {
+    "start": "node bin/index.js",
+    "build": "nexe",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
