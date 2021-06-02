@@ -43,10 +43,11 @@ API Used: [CoWin Public API](https://apisetu.gov.in/public/marketplace/api/cowin
 ### Screenshots of notifications
 - Push notification on system 
 
-![ADC65EF1-9A6C-40F5-89A9-B523C455A2CA](<img src="https://user-images.githubusercontent.com/17775859/120505870-04c5da80-c3e3-11eb-82e0-32a4e686ca54.jpeg" width="200" height="200">)
+<img src="https://user-images.githubusercontent.com/17775859/120505870-04c5da80-c3e3-11eb-82e0-32a4e686ca54.jpeg" width="200" height="200">
+
 - Text Notification 
 
-![text-notif](<img src="https://user-images.githubusercontent.com/17775859/120506591-b107c100-c3e3-11eb-8c39-2297b0df4c06.jpeg" width="200" height="200">)
+<img src="https://user-images.githubusercontent.com/17775859/120506591-b107c100-c3e3-11eb-8c39-2297b0df4c06.jpeg" width="200" height="200">
 
 
 ### Result
